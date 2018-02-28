@@ -5,6 +5,9 @@ import pprint
 from matminer import PlotlyFig
 from matminer.datasets.dataframe_loader import load_elastic_tensor
 
+__author__ = "Alex Dunn <ardunn@lbl.gov>"
+
+
 def plot_modes(api_key, username):
     """
     Demonstrate PlotlyFig plotting modes and show the easiest way to make

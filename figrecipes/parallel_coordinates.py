@@ -5,6 +5,7 @@ PlotlyFig examples of parallel coordinates plots.
 from matminer.datasets.dataframe_loader import load_elastic_tensor
 from matminer import PlotlyFig
 
+__author__ = "Alex Dunn <ardunn@lbl.gov>"
 
 def basic_parallel_coordinates():
     df = load_elastic_tensor()

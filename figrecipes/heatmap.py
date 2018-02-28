@@ -7,6 +7,8 @@ import pandas as pd
 from sklearn import datasets
 from matminer import PlotlyFig
 
+__author__ = "Alireza Faghaninia  <alireza.faghaninia@gmail.com>"
+
 
 def plot_simple_heatmap_df():
     """

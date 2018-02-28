@@ -6,6 +6,7 @@ matminer.
 from matminer import PlotlyFig
 from matminer.datasets.dataframe_loader import load_dielectric_constant
 
+__author__ = "Alex Dunn <ardunn@lbl.gov>"
 
 def basic_bar():
     pf = PlotlyFig()

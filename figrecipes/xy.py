@@ -14,6 +14,8 @@ from matminer.datasets.dataframe_loader import load_elastic_tensor
 from matminer.figrecipes.plot import PlotlyFig
 from pymatgen import Composition
 
+__author__ = "Alireza Faghaninia  <alireza.faghaninia@gmail.com>"
+
 def plot_simple_xy():
     """
     Very simple xy plot with all default settings.

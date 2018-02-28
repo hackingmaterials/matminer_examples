@@ -6,6 +6,8 @@ from matminer.datasets.dataframe_loader import load_elastic_tensor, \
     load_dielectric_constant
 from matminer.figrecipes.plot import PlotlyFig
 
+__author__ = "Alex Dunn <ardunn@lbl.gov>"
+
 
 def basic_histogram():
     """
