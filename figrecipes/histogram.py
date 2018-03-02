@@ -18,7 +18,7 @@ def basic_histogram():
     df = load_dielectric_constant()
     pf = PlotlyFig(title="Distribution of Band Gaps in the Dielectric Constant "
                          "Dataset",
-                   x_title="Bang Gap (eV)",
+                   x_title="Band Gap (eV)",
                    hoverinfo='y')
     pf.histogram(df['band_gap'])
 
