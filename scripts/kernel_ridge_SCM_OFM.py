@@ -107,7 +107,7 @@ kf = KFold(NUM_SPLITS, False)
 # because each vector descriptor is a list of eigenvalues of the SCM.
 # The SCM is positive definite, so its eigenvalues are positive.
 # This class only changes the results slightly, however, so the script can
-# be simplified by replacing the SCM estimator below with a plain KernelRide()
+# be simplified by replacing the SCM estimator below with a plain KernelRidge()
 # instance.
 class KrrScm(KernelRidge):
 

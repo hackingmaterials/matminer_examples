@@ -10,7 +10,7 @@ __author__ = "Alex Dunn <ardunn@lbl.gov>"
 
 def basic_bar():
     pf = PlotlyFig()
-    pf.bar(x = ['var a', 'var b', 'var c'], y = [1, 2, 3])
+    pf.bar(x=['var a', 'var b', 'var c'], y=[1, 2, 3])
 
 
 def advanced_bar():
