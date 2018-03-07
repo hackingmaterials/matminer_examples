@@ -2,9 +2,10 @@
 
 import os
 import subprocess
-import tempfile
 
 import unittest
+
+from pymatgen import MPRester
 
 module_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           '..', 'scripts')
@@ -14,10 +15,10 @@ mpds_key = os.environ.get("MPDS_KEY")
 mp_key = MPRester().api_key
 
 class ScriptExampleTest(unittest.TestCase):
-    @unittest.skipIf(mp_key is None, "MP API key not set in .pmgrc.yaml")
     def test_kernel_ridge_SCM_OFM(self):
         path = os.path.join(module_dir, "kernel_ridge_SCM_OFM.py")
-        _script_run(path)
+        # Run in debug mode
+        _script_run(path, extra_args=['--debug'])
 
     def test_figrecipes(self):
         fr_dir = os.path.join(module_dir, '..', 'figrecipes')
@@ -29,12 +30,13 @@ class ScriptExampleTest(unittest.TestCase):
         for test in tests:
             output = _script_run(os.path.join(fr_dir, '{}.py'.format(test)))
 
-def _script_run(path):
+def _script_run(path, extra_args=None):
     """
     Execute a script and collect output.
 
     Args:
         path (str): file path for script
+        extra_args (list): additional args for running script
 
     Returns: script output
 
@@ -42,6 +44,8 @@ def _script_run(path):
     dirname, __ = os.path.split(path)
     os.chdir(dirname)
     args = ["python", path]
+    if extra_args:
+        args.extend(extra_args)
     output = subprocess.check_call(args)
     return output
 

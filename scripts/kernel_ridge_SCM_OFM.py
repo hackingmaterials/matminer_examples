@@ -9,7 +9,6 @@ import sklearn.metrics
 from sklearn.utils import shuffle
 
 from matminer.featurizers.structure import SineCoulombMatrix, OrbitalFieldMatrix
-from matminer.data_retrieval.retrieve_MP import MPDataRetrieval
 from matminer.datasets.dataframe_loader import load_flla
 
 import argparse
@@ -68,6 +67,7 @@ if FABER:
     df = load_flla()
 else:
     # Initialize data retrieval class
+    from matminer.data_retrieval.retrieve_MP import MPDataRetrieval
     mpr = MPDataRetrieval()
     criteria = "*-*-O"
     # Choose list of properties to retrive
