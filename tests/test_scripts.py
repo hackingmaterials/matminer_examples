@@ -19,6 +19,15 @@ class ScriptExampleTest(unittest.TestCase):
         path = os.path.join(module_dir, "kernel_ridge_SCM_OFM.py")
         _script_run(path)
 
+    def test_figrecipes(self):
+        fr_dir = os.path.join(module_dir, '..', 'figrecipes')
+        # List of scripts to test, note that we don't test 'extras'
+        # because of online functionality and 'heatmap' needs to be resolved
+        #TODO: resolve heatmap discrepancy with main repo
+        tests = ['bar', 'histogram', 'parallel_coordinates',
+                'scatter_matrix', 'violin', 'xy']
+        for test in tests:
+            output = _script_run(os.path.join(fr_dir, '{}.py'.format(test)))
 
 def _script_run(path):
     """

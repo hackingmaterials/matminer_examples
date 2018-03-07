@@ -8,11 +8,15 @@ from sklearn.model_selection import KFold, GridSearchCV
 import sklearn.metrics
 from sklearn.utils import shuffle
 
-import matminer.featurizers.structure as MM
+from matminer.featurizers.structure import SineCoulombMatrix, OrbitalFieldMatrix
 from matminer.data_retrieval.retrieve_MP import MPDataRetrieval
 from matminer.datasets.dataframe_loader import load_flla
 
+import argparse
 import time
+
+
+__author__ = "Kyle Bystrom"
 
 """
 The following script is an example of how to use matminer to run a kernel
@@ -35,26 +39,36 @@ matrices (SCM) and orbital field matrices (OFM). The script follows 4 main steps
     for each model.
 """
 
+argparser = argparse.ArgumentParser()
+argparser.add_argument("-d", "--debug", action='store_true', help='debug mode')
+argparser.add_argument("-mp", "--use_mp", action='store_true',
+                       help='use mp ternary oxides, rather than faber dataset')
+argparser.add_argument("-n", "--njobs", default=24, help='number of jobs')
+args = argparser.parse_args()
+
 # If FABER is True, the script reads the list of material_ids in mpids.txt,
 # which is the dataset used by Faber et al in their 2015 paper on the sine
 # coulomb matrix. If FABER is False, all ternary oxides are retrieved from
 # the Materials Project database, and the dataframe is filtered for stability
 # and structure size.
-FABER = True
+FABER = not args.use_mp
 FILTER = not FABER
-NJOBS = 24
-# Print parameters.
-print("REMOVE UNSTABLE ENTRIES", FILTER)
-print("USE FABER DATASET", FABER)
-print("USE TERNARY OXIDE DATASET", not FABER)
-print("NUMBER OF JOBS", NJOBS)
+NJOBS = args.njobs
 
-# Initialize data retrieval class
-mpr = MPDataRetrieval()
-# Choose query criteria
+# Print parameters.
+print("REMOVE UNSTABLE ENTRIES:", FILTER)
+print("USE FABER DATASET:", FABER)
+print("USE TERNARY OXIDE DATASET:", not FABER)
+print("NUMBER OF JOBS:", NJOBS)
+print("DEBUG MODE:", args.debug)
+
+
+# Set up dataset
 if FABER:
     df = load_flla()
 else:
+    # Initialize data retrieval class
+    mpr = MPDataRetrieval()
     criteria = "*-*-O"
     # Choose list of properties to retrive
     properties = ['structure', 'nsites', 'formation_energy_per_atom', 'e_above_hull']
@@ -67,11 +81,14 @@ else:
     # pymatgen.core.Structure objects as shown.
     df['structure'] = pd.Series([Structure.from_dict(df['structure'][i])\
         for i in range(df.shape[0])], df.index)
-
-# Filter the dataset if it consists of ternary oxides
-if FILTER:
+    # Filter the dataset if it consists of ternary oxides
     df = df[df['e_above_hull'] < 0.1]
     df = df[df['nsites'] <= 30]
+
+# For debug mode only use 100 entries
+if args.debug:
+    df = df.head(100)
+
 # Shuffle the structures to reduce bias
 df = shuffle(df)
 # Output dataframe size as debug info.
@@ -90,29 +107,36 @@ params['orbital field matrix'] = [{'alpha' : [10**(-a) for a in range(2,6)],
     {'alpha' : [10**(-a) for a in range(2,6)], 'kernel' : ['laplacian'],
     'gamma' : [1.0/s for s in (2,4,8,16,32)]}]
 
-# Initialize the KFold cross validation splits used by the grid search algorithm.
-inner_cv = KFold(n_splits=4, shuffle=False, random_state=0)
-
 # Set up cross validation settings
 nt = max(df['nsites'])
-NUM_SPLITS = 5
+if args.debug:
+    NUM_SPLITS = 3
+else:
+    NUM_SPLITS = 5
 inner_cv = KFold(n_splits=NUM_SPLITS-1, shuffle=False, random_state=0)
 kf = KFold(NUM_SPLITS, False)
 
-# Custom SCM KernelRidge estimator
-# This estimator ensures that scores are based on formation energy per atom
-# by dividing predicted and actual y values
-# by the number of nonzero items in each row of the X matrix. This is equivalent
-# to dividing by the number of sites in the corresponding structure
-# because each vector descriptor is a list of eigenvalues of the SCM.
-# The SCM is positive definite, so its eigenvalues are positive.
-# This class only changes the results slightly, however, so the script can
-# be simplified by replacing the SCM estimator below with a plain KernelRidge()
-# instance.
-class KrrScm(KernelRidge):
 
-    def __init__(self, alpha=1, kernel='linear', gamma = None, degree = 3, coef0 = 1, kernel_params = None):
-        super(KrrScm, self).__init__(alpha, kernel, gamma, degree, coef0, kernel_params)
+class KrrScm(KernelRidge):
+    """
+    Custom SCM KernelRidge estimator
+
+    This estimator ensures that scores are based on formation
+    energy per atom by dividing predicted and actual y values
+    by the number of nonzero items in each row of the X matrix.
+    This is equivalent to dividing by the number of sites in
+    the corresponding structure because each vector descriptor
+    is a list of eigenvalues of the SCM.  The SCM is positive
+    definite, so its eigenvalues are positive.  This class only
+    changes the results slightly, however, so the script can
+    be simplified by replacing the SCM estimator below with a
+    plain KernelRidge() instance.
+    """
+
+    def __init__(self, alpha=1, kernel='linear', gamma=None,
+                 degree=3, coef0=1, kernel_params=None):
+        super(KrrScm, self).__init__(alpha, kernel, gamma,
+                                     degree, coef0, kernel_params)
 
     def score(self, X, y):
         sizes = np.array([self.length(row) for row in X])
@@ -129,7 +153,7 @@ print ("DIAG ELEMS", DIAG)
 
 # Featurize dataframe with sine coulomb matrix and time it
 start = time.monotonic()
-scm = MM.SineCoulombMatrix(DIAG)
+scm = SineCoulombMatrix(DIAG)
 # Set the number of jobs for parallelization
 scm.set_n_jobs(NJOBS)
 df = scm.featurize_dataframe(df, 'structure')
@@ -143,9 +167,11 @@ print()
 # Set up KRR model
 krr = KrrScm()
 print(krr.get_params().keys())
+
 # Initialize hyperparameter grid search
 hpsel = GridSearchCV(krr, params['sine coulomb matrix'], cv=inner_cv, refit=True)
 X = df['sine coulomb matrix'].as_matrix()
+
 # Append each vector descriptor with zeroes to make them all the same size.
 XLIST = []
 for i in range(len(X)):
@@ -155,6 +181,7 @@ print(X.shape)
 Y = df['formation_energy'].as_matrix()
 N = df['nsites'].as_matrix()
 mae, rmse, r2 = 0, 0, 0
+
 # Evaluate SCM and time it
 start = time.monotonic()
 for train_index, test_index in kf.split(X):
@@ -168,6 +195,7 @@ for train_index, test_index in kf.split(X):
     mae += np.mean(np.abs(Y_pred - Y_test) / N_test) / NUM_SPLITS
     rmse += np.mean(((Y_pred - Y_test) / N_test)**2)**0.5 / NUM_SPLITS
     r2 += sklearn.metrics.r2_score(Y_test / N_test, Y_pred / N_test) / NUM_SPLITS
+
 print ("SCM RESULTS MAE = %f, RMSE = %f, R-SQUARED = %f" % (mae, rmse, r2))
 finish = time.monotonic()
 print ("TIME TO TEST SCM %f SECONDS" % (finish-start))
@@ -179,7 +207,7 @@ for ROW in [False, True]:
 
     # Featurize dataframe with OFM and time it
     start = time.monotonic()
-    ofm = MM.OrbitalFieldMatrix(ROW)
+    ofm = OrbitalFieldMatrix(ROW)
     ofm.set_n_jobs(NJOBS)
     df = ofm.featurize_dataframe(df, 'structure')
     df['orbital field matrix'] = pd.Series([s.flatten() \
@@ -190,7 +218,8 @@ for ROW in [False, True]:
 
     # Get OFM descriptor and set up KRR model
     krr = KernelRidge()
-    hpsel = GridSearchCV(krr, params['orbital field matrix'], cv=inner_cv, refit=True)
+    hpsel = GridSearchCV(krr, params['orbital field matrix'],
+                         cv=inner_cv, refit=True)
     X = df['orbital field matrix'].as_matrix()
     # Flatten each OFM to form a vector descriptor
     XLIST = []
