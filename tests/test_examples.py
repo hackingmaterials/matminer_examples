@@ -14,7 +14,7 @@ module_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 citrine_key = os.environ.get("CITRINE_KEY")
 mpds_key = os.environ.get("MPDS_KEY")
-mp_key = MPDataRetrieval().api_key
+mp_key = MPDataRetrieval().mprester.api_key
 
 class NotebookExampleTest(unittest.TestCase):
     def test_intro_predicting_bulk_modulus(self):
@@ -26,9 +26,10 @@ class NotebookExampleTest(unittest.TestCase):
         path = os.path.join(module_dir, "experiment_vs_computed_bandgap.ipynb")
         _notebook_run(path)
 
-    @unittest.skipIf(not all(citrine_key, mpds_key, mp_key))
+    @unittest.skipIf(not all([citrine_key, mpds_key, mp_key]),
+                     "data retrieval keys not set")
     def test_get_data(self):
-        path = os.path.join(module_dir, "getting_data.ipynb")
+        path = os.path.join(module_dir, "data_retrieval_basics.ipynb")
         _notebook_run(path)
 
     @unittest.skipIf(mpds_key is None, "MPDS_KEY env variable not set")
