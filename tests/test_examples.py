@@ -41,6 +41,11 @@ class NotebookExampleTest(unittest.TestCase):
         path = os.path.join(module_dir, "visualization_with_figrecipes.ipynb")
         _notebook_run(path)
 
+    @unittest.skipIf(not all([mp_key, citrine_key]))
+    def test_advanced_visualization(self):
+        path = os.path.join(module_dir, "advanced_visualization.ipynb")
+        _notebook_run(path)
+
 
 def _notebook_run(path):
     """
