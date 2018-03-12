@@ -29,6 +29,8 @@ Running the examples should provide similar outputs in interactive form.
 `plot_simple_heatmap_df()`: `static_heatmap_df.jpeg`
 ![heatmap from dataframe](static_heatmap_df.jpeg "Heatmap from dataframe")
 
+`plot_mean_elastic_tensors()`: `static_elastic_constants.jpeg`
+![Heatmap from elastic dataframe](static_elastic_constants.jpeg "Heatmap from elastic dataframe")
 
 ### histogram.py
 `basic_histogram()`: `static_histogram_basic.jpeg`
