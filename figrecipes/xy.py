@@ -32,17 +32,16 @@ def plot_bulk_shear_moduli():
         bulk vs. shear modulus. Poisson ratio as marker colors make the
         distinction between materials with different bulk/shear modulus ratios
     Returns:
-        plotly plot in "offline" mode poped in the default browser.
+        plotly plot in "offline" mode popped in the default browser.
     """
     df = load_elastic_tensor()
     pf = PlotlyFig(df,
                    y_title='Bulk Modulus (GPa)',
                    x_title='Shear Modulus (GPa)',
-                   filename='bulk_shear_moduli')
-    pf.xy(('G_VRH', 'K_VRH'),
-          labels='material_id',
-          colors='poisson_ratio',
-          colorscale='Picnic')
+                   filename='bulk_shear_moduli.jpeg')
+    pf.xy(('G_VRH', 'K_VRH'), labels='material_id', colors='poisson_ratio',
+          colorscale='Picnic', limits={'x': (0, 300)})
+
 
 
 def plot_thermoelectrics(citrine_api_key, limit=0):
@@ -147,8 +146,8 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
 
 if __name__ == '__main__':
     plot_simple_xy()
-    plot_bulk_shear_moduli()
-
-    MY_CITRINE_API_KEY=""
-    plot_thermoelectrics(MY_CITRINE_API_KEY, limit=0)
-    plot_expt_compt_band_gaps(MY_CITRINE_API_KEY, limit=0)
+    # plot_bulk_shear_moduli()
+    #
+    # MY_CITRINE_API_KEY=""
+    # plot_thermoelectrics(MY_CITRINE_API_KEY, limit=0)
+    # plot_expt_compt_band_gaps(MY_CITRINE_API_KEY, limit=0)
