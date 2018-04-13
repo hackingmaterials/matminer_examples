@@ -20,7 +20,7 @@ def plot_simple_xy():
     """
     Very simple xy plot with all default settings.
     Returns:
-        plotly plot in "offline" mode poped in the default browser.
+        plotly plot in "offline" mode popped in the default browser.
     """
     pf = PlotlyFig(title="Basic Example", filename="basic.html")
     pf.xy(([1, 2, 3], [4, 5, 6]))
@@ -55,7 +55,7 @@ def plot_thermoelectrics(citrine_api_key, limit=0):
             a Citrine account? Visit https://citrine.io/
         limit (int): limit the number of entries (0 means no limit)
     Returns:
-        plotly plot in "offline" mode poped in the default browser.
+        plotly plot in "offline" mode popped in the default browser.
     """
     cdr = CitrineDataRetrieval(api_key=citrine_api_key)
     cols = ['chemicalFormula', 'Electrical resistivity', 'Seebeck coefficient',
@@ -96,7 +96,7 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
             a Citrine account? Visit https://citrine.io/
         limit (int): limit the number of entries (0 means no limit)
     Returns:
-        plotly plots in "offline" mode poped in the default browser.
+        plotly plots in "offline" mode popped in the default browser.
     """
 
     # pull experimental band gaps from Citrine
@@ -146,8 +146,8 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
 
 if __name__ == '__main__':
     plot_simple_xy()
-    # plot_bulk_shear_moduli()
-    #
-    # MY_CITRINE_API_KEY=""
-    # plot_thermoelectrics(MY_CITRINE_API_KEY, limit=0)
-    # plot_expt_compt_band_gaps(MY_CITRINE_API_KEY, limit=0)
+    plot_bulk_shear_moduli()
+
+    MY_CITRINE_API_KEY=""
+    plot_thermoelectrics(MY_CITRINE_API_KEY, limit=0)
+    plot_expt_compt_band_gaps(MY_CITRINE_API_KEY, limit=0)
