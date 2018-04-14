@@ -20,7 +20,7 @@ def plot_simple_xy():
     """
     Very simple xy plot with all default settings.
     Returns:
-        plotly plot in "offline" mode poped in the default browser.
+        plotly plot in "offline" mode popped in the default browser.
     """
     pf = PlotlyFig(title="Basic Example", filename="basic.html")
     pf.xy(([1, 2, 3], [4, 5, 6]))
@@ -32,17 +32,16 @@ def plot_bulk_shear_moduli():
         bulk vs. shear modulus. Poisson ratio as marker colors make the
         distinction between materials with different bulk/shear modulus ratios
     Returns:
-        plotly plot in "offline" mode poped in the default browser.
+        plotly plot in "offline" mode popped in the default browser.
     """
     df = load_elastic_tensor()
     pf = PlotlyFig(df,
                    y_title='Bulk Modulus (GPa)',
                    x_title='Shear Modulus (GPa)',
-                   filename='bulk_shear_moduli')
-    pf.xy(('G_VRH', 'K_VRH'),
-          labels='material_id',
-          colors='poisson_ratio',
-          colorscale='Picnic')
+                   filename='bulk_shear_moduli.jpeg')
+    pf.xy(('G_VRH', 'K_VRH'), labels='material_id', colors='poisson_ratio',
+          colorscale='Picnic', limits={'x': (0, 300)})
+
 
 
 def plot_thermoelectrics(citrine_api_key, limit=0):
@@ -56,7 +55,7 @@ def plot_thermoelectrics(citrine_api_key, limit=0):
             a Citrine account? Visit https://citrine.io/
         limit (int): limit the number of entries (0 means no limit)
     Returns:
-        plotly plot in "offline" mode poped in the default browser.
+        plotly plot in "offline" mode popped in the default browser.
     """
     cdr = CitrineDataRetrieval(api_key=citrine_api_key)
     cols = ['chemicalFormula', 'Electrical resistivity', 'Seebeck coefficient',
@@ -97,7 +96,7 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
             a Citrine account? Visit https://citrine.io/
         limit (int): limit the number of entries (0 means no limit)
     Returns:
-        plotly plots in "offline" mode poped in the default browser.
+        plotly plots in "offline" mode popped in the default browser.
     """
 
     # pull experimental band gaps from Citrine
