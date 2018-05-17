@@ -58,11 +58,15 @@ def plot_thermoelectrics(citrine_api_key, limit=0):
         plotly plot in "offline" mode popped in the default browser.
     """
     cdr = CitrineDataRetrieval(api_key=citrine_api_key)
-    cols = ['chemicalFormula', 'Electrical resistivity', 'Seebeck coefficient',
+    cols = ['Electrical resistivity', 'Seebeck coefficient',
             'Thermal conductivity', 'Thermoelectric figure of merit (zT)']
-    df_te = cdr.get_dataframe(data_type='experimental', data_set_id=150557,
-                              show_columns=cols, max_results=limit
-                              ).set_index('chemicalFormula').astype(float)
+    df_te = cdr.get_dataframe(criteria={'data_type': 'experimental',
+                                        'data_set_id': 150557,
+                                        'max_results': limit},
+                              properties=['Seebeck coefficient'],
+                              secondary_fields=True,
+                              ).set_index('chemicalFormula')
+    df_te = df_te[cols].astype(float)
     df_te = df_te[(df_te['Electrical resistivity'] > 5e-4) & \
                   (df_te['Electrical resistivity'] < 0.1)]
     df_te = df_te[abs(df_te['Seebeck coefficient']) < 500].rename(
@@ -102,9 +106,12 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
     # pull experimental band gaps from Citrine
     cdr = CitrineDataRetrieval(api_key=citrine_api_key)
     cols = ['chemicalFormula', 'Band gap']
-    df_ct = cdr.get_dataframe(prop='band gap', data_type='experimental',
-                              show_columns=cols, max_results=limit).rename(
-        columns={'chemicalFormula': 'Formula', 'Band gap': 'Expt. gap'})
+    df_ct = cdr.get_dataframe(criteria={'data_type':'experimental',
+                                        'max_results':limit},
+                              secondary_fields=True,
+                              properties=['Band gap'])
+    df_ct = df_ct[cols].rename(columns={'chemicalFormula': 'Formula',
+                                        'Band gap': 'Expt. gap'})
     df_ct = df_ct[df_ct['Formula'] != 'In1p1'] # p1 not recognized in Composition
     df_ct = df_ct.dropna() # null band gaps cause problem when plotting residuals
     df_ct['Formula'] = df_ct['Formula'].transform(
