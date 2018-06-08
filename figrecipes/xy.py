@@ -65,8 +65,8 @@ def plot_thermoelectrics(citrine_api_key, limit=0):
                                         'max_results': limit},
                               properties=['Seebeck coefficient'],
                               secondary_fields=True,
-                              ).set_index('chemicalFormula')
-    df_te = df_te[cols].astype(float)
+                              )
+    df_te[cols] = df_te[cols].astype(float)
     df_te = df_te[(df_te['Electrical resistivity'] > 5e-4) & \
                   (df_te['Electrical resistivity'] < 0.1)]
     df_te = df_te[abs(df_te['Seebeck coefficient']) < 500].rename(
@@ -82,7 +82,7 @@ def plot_thermoelectrics(citrine_api_key, limit=0):
                    colorbar_title='Thermal Conductivity (W/m.K)',
                    filename='thermoelectrics.html')
     pf.xy(('Electrical resistivity', 'Seebeck coefficient'),
-          labels=df_te.index,
+          labels=['chemicalFormula', 'Preparation method', 'Crystallinity'],
           sizes='zT',
           colors='Thermal conductivity',
           color_range=[0, 5])
@@ -140,7 +140,8 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
         ([0, 12], [0, 12])
     ],
         lines=[{}, {'color': 'black', 'dash': 'dash'}],
-        labels=df_final.index, modes=['markers', 'lines'],
+        labels=['Formula', df_final.index],
+        modes=['markers', 'lines'],
         names=['Computed vs. expt.', 'Expt. gap'])
 
     # residual:
@@ -148,7 +149,8 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
     pf.set_arguments(x_title='Experimental band gap (eV)',
                     y_title='Residual (Computed - Expt.) Band Gap (eV)',
                     filename='band_gap_residuals')
-    pf.xy(('Expt. gap', residuals), labels = df_final.index)
+    pf.xy(('Expt. gap', residuals),
+          labels = ['Formula', df_final.index])
 
 
 if __name__ == '__main__':
