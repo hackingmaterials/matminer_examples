@@ -1,6 +1,11 @@
 # matminer_examples
 A repo of examples for the matminer (https://github.com/hackingmaterials/matminer) code
 
+Click on the icon below to run the example notebooks interactively online (it may take a few minutes to setup matminer environment):
+
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/hackingmaterials/matminer_examples/master?filepath=notebooks%2Findex.ipynb)
+
+
 If you find matminer useful, please encourage its development by citing the following paper in your research:
 ```
 Ward, L., Dunn, A., Faghaninia, A., Zimmermann, N. E. R., Bajaj, S., Wang, Q.,
