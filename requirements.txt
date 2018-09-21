@@ -1,1 +1,1 @@
-matminer
+matminer[mpds]
