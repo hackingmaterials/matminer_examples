@@ -5,7 +5,7 @@ PlotlyFig examples of heatmap plots.
 import numpy as np
 import pandas as pd
 from matminer import PlotlyFig
-from matminer.datasets.dataframe_loader import load_elastic_tensor
+from matminer.datasets import load_dataset
 from matminer.featurizers.structure import GlobalSymmetryFeatures, \
     DensityFeatures
 
@@ -54,7 +54,7 @@ def plot_mean_elastic_tensors():
     Returns:
         plotly plot in "offline" mode poped in the default browser.
     """
-    df = load_elastic_tensor()
+    df = load_dataset("elastic_tensor_2015")
     # data preparation:
     df['Mean Elastic Constant'] = df['elastic_tensor'].apply(lambda x: np.mean(x))
     gs = GlobalSymmetryFeatures(desired_features=['crystal_system'])

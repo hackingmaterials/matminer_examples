@@ -9,7 +9,7 @@ import sklearn.metrics
 from sklearn.utils import shuffle
 
 from matminer.featurizers.structure import SineCoulombMatrix, OrbitalFieldMatrix
-from matminer.datasets.dataframe_loader import load_flla
+from matminer.datasets import load_dataset
 
 import argparse
 import time
@@ -64,7 +64,7 @@ print("DEBUG MODE:", args.debug)
 
 # Set up dataset
 if FABER:
-    df = load_flla()
+    df = load_dataset("flla")
 else:
     # Initialize data retrieval class
     from matminer.data_retrieval.retrieve_MP import MPDataRetrieval
@@ -158,10 +158,11 @@ scm = SineCoulombMatrix(DIAG)
 scm.set_n_jobs(NJOBS)
 df = scm.featurize_dataframe(df, 'structure')
 # Take the eigenvalues of the SCMs to form vector descriptors
-df['sine coulomb matrix'] = pd.Series([np.sort(np.linalg.eigvals(s))[::-1] \
-    for s in df['sine coulomb matrix']], df.index)
+df['sine coulomb matrix'] = pd.Series([np.sort(np.linalg.eigvals(s))[::-1]
+                                       for s in df['sine coulomb matrix']],
+                                      df.index)
 finish = time.monotonic()
-print ("TIME TO FEATURIZE SCM %f SECONDS" % (finish-start))
+print("TIME TO FEATURIZE SCM %f SECONDS" % (finish-start))
 print()
 
 # Set up KRR model
@@ -213,7 +214,7 @@ for ROW in [False, True]:
     df['orbital field matrix'] = pd.Series([s.flatten() \
         for s in df['orbital field matrix']], df.index)
     finish = time.monotonic()
-    print ("TIME TO FEATURIZE OFM %f SECONDS" % (finish-start))
+    print("TIME TO FEATURIZE OFM %f SECONDS" % (finish-start))
     print()
 
     # Get OFM descriptor and set up KRR model
@@ -241,9 +242,9 @@ for ROW in [False, True]:
         mae += np.mean(np.abs(Y_pred - Y_test)) / NUM_SPLITS
         rmse += np.mean((Y_pred - Y_test)**2)**0.5 / NUM_SPLITS
         r2 += sklearn.metrics.r2_score(Y_test, Y_pred) / NUM_SPLITS
-    print ("OFM RESULTS: MAE = %f, RMSE = %f, R-SQUARED = %f" % (mae, rmse, r2))
+    print("OFM RESULTS: MAE = %f, RMSE = %f, R-SQUARED = %f" % (mae, rmse, r2))
     finish = time.monotonic()
-    print ("TIME TO TEST OFM %f SECONDS" % (finish-start))
+    print("TIME TO TEST OFM %f SECONDS" % (finish-start))
     print()
     df.drop('orbital field matrix', 1, inplace = True)
 

@@ -3,7 +3,7 @@ Examples of formatting and using extra features of PlotlyFig
 """
 import pprint
 from matminer import PlotlyFig
-from matminer.datasets.dataframe_loader import load_elastic_tensor
+from matminer.datasets import load_dataset
 
 __author__ = "Alex Dunn <ardunn@lbl.gov>"
 
@@ -38,7 +38,7 @@ def plot_modes(api_key, username):
     if not api_key or not username:
         raise ValueError("Specify your Plotly api_key and username!")
 
-    df = load_elastic_tensor()
+    df = load_dataset("elastic_tensor_2015")
 
     # First lets set uo our figure generally.
     pf = PlotlyFig(df, title='Elastic data', mode='offline', x_scale='log',
@@ -97,7 +97,7 @@ def formatting_example(api_key, username):
     if not api_key or not username:
         raise ValueError("Specify your Plotly api_key and username!")
 
-    df = load_elastic_tensor()
+    df = load_dataset("elastic_tensor_2015")
 
     pf = PlotlyFig(df=df,
                    api_key=api_key,
@@ -120,14 +120,12 @@ def formatting_example(api_key, username):
 
     pf.xy(('G_VRH', 'K_VRH'), labels='material_id', colors='poisson_ratio')
 
-
     # We can also use LaTeX if we use Plotly online/static
     pf.set_arguments(title="$\\text{Origin of Poisson Ratio } \\nu $",
                      y_title='$K_{VRH} \\text{(GPa)}$',
                      x_title='$G_{VRH} \\text{(GPa)}$',
                      colorbar_title='$\\nu$')
     pf.xy(('G_VRH', 'K_VRH'), labels='material_id', colors='poisson_ratio')
-
 
 
 if __name__ == "__main__":

@@ -4,9 +4,10 @@ matminer.
 """
 
 from matminer import PlotlyFig
-from matminer.datasets.dataframe_loader import load_dielectric_constant
+from matminer.datasets import load_dataset
 
 __author__ = "Alex Dunn <ardunn@lbl.gov>"
+
 
 def basic_bar():
     pf = PlotlyFig()
@@ -19,7 +20,7 @@ def advanced_bar():
     samples from the piezoelectric_tensor dataset.
     """
     # Format the general layout of our figure with 5 samples
-    pf = PlotlyFig(df=load_dielectric_constant().iloc[:5],
+    pf = PlotlyFig(df=load_dataset("dielectric_constant").iloc[:5],
                    title='Comparison of 5 materials band gaps and n')
     # Plot!
     colors = ['red', 'orange', 'yellow', 'blue', 'green']

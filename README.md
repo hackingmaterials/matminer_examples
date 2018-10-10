@@ -23,3 +23,5 @@ Contributors:
 * Saurabh Bajaj
 * Julien Brenneck
 * Kyle Bystrom
+* Alex Ganose
+* Daniel Dopp
