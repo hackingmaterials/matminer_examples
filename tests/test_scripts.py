@@ -14,6 +14,7 @@ citrine_key = os.environ.get("CITRINE_KEY")
 mpds_key = os.environ.get("MPDS_KEY")
 mp_key = MPRester().api_key
 
+
 class ScriptExampleTest(unittest.TestCase):
     def test_kernel_ridge_SCM_OFM(self):
         path = os.path.join(module_dir, "kernel_ridge_SCM_OFM.py")
@@ -29,6 +30,7 @@ class ScriptExampleTest(unittest.TestCase):
                 'scatter_matrix', 'violin', 'xy']
         for test in tests:
             output = _script_run(os.path.join(fr_dir, '{}.py'.format(test)))
+
 
 def _script_run(path, extra_args=None):
     """

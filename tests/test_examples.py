@@ -16,6 +16,7 @@ citrine_key = os.environ.get("CITRINE_KEY")
 mpds_key = os.environ.get("MPDS_KEY")
 mp_key = MPDataRetrieval().mprester.api_key
 
+
 class NotebookExampleTest(unittest.TestCase):
     def test_intro_predicting_bulk_modulus(self):
         path = os.path.join(module_dir, "intro_predicting_bulk_modulus.ipynb")

@@ -10,11 +10,12 @@ MAPI_KEY environment variable.
 
 from matminer.data_retrieval.retrieve_Citrine import CitrineDataRetrieval
 from matminer.data_retrieval.retrieve_MP import MPDataRetrieval
-from matminer.datasets.dataframe_loader import load_elastic_tensor
+from matminer.datasets import load_dataset
 from matminer.figrecipes.plot import PlotlyFig
 from pymatgen import Composition
 
 __author__ = "Alireza Faghaninia  <alireza.faghaninia@gmail.com>"
+
 
 def plot_simple_xy():
     """
@@ -34,14 +35,13 @@ def plot_bulk_shear_moduli():
     Returns:
         plotly plot in "offline" mode popped in the default browser.
     """
-    df = load_elastic_tensor()
+    df = load_dataset("elastic_tensor_2015")
     pf = PlotlyFig(df,
                    y_title='Bulk Modulus (GPa)',
                    x_title='Shear Modulus (GPa)',
                    filename='bulk_shear_moduli.jpeg')
     pf.xy(('G_VRH', 'K_VRH'), labels='material_id', colors='poisson_ratio',
           colorscale='Picnic', limits={'x': (0, 300)})
-
 
 
 def plot_thermoelectrics(citrine_api_key, limit=0):
@@ -125,7 +125,6 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
         columns={'pretty_formula': 'Formula', 'band_gap': 'MP computed gap',
                  'material_id': 'mpid'})
 
-
     # pick the most stable structure
     df_mp = df.loc[df.groupby("Formula")["e_above_hull"].idxmin()]
     df_final = df_ct.merge(df_mp, on='Formula').drop(
@@ -147,16 +146,16 @@ def plot_expt_compt_band_gaps(citrine_api_key, limit=0):
     # residual:
     residuals = df_final['MP computed gap']-df_final['Expt. gap'].astype(float)
     pf.set_arguments(x_title='Experimental band gap (eV)',
-                    y_title='Residual (Computed - Expt.) Band Gap (eV)',
-                    filename='band_gap_residuals')
+                     y_title='Residual (Computed - Expt.) Band Gap (eV)',
+                     filename='band_gap_residuals')
     pf.xy(('Expt. gap', residuals),
-          labels = ['Formula', df_final.index])
+          labels=['Formula', df_final.index])
 
 
 if __name__ == '__main__':
     plot_simple_xy()
     plot_bulk_shear_moduli()
 
-    MY_CITRINE_API_KEY=""
+    MY_CITRINE_API_KEY = ""
     plot_thermoelectrics(MY_CITRINE_API_KEY, limit=0)
     plot_expt_compt_band_gaps(MY_CITRINE_API_KEY, limit=0)
