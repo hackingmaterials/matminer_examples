@@ -25,3 +25,5 @@ Contributors:
 * Kyle Bystrom
 * Alex Ganose
 * Daniel Dopp
+
+Interested in contributing? See our [contribution guidelines](https://github.com/hackingmaterials/matminer_examples/blob/master/CONTRIBUTING.md)
