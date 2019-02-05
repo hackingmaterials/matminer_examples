@@ -1,1 +1,3 @@
 matminer[mpds]
+lolopy
+matplotlib
