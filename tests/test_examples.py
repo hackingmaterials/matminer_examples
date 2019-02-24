@@ -9,8 +9,13 @@ import unittest
 
 from matminer.data_retrieval.retrieve_MP import MPDataRetrieval
 
-module_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                          '..', 'notebooks')
+dr_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          '..', 'matminer_examples', 'data_retrieval-nb')
+fr_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          '..', 'matminer_examples', 'figrecipes-nb')
+ml_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          '..', 'matminer_examples', 'machine_learning-nb')
+
 
 citrine_key = os.environ.get("CITRINE_KEY")
 mpds_key = os.environ.get("MPDS_KEY")
@@ -19,32 +24,32 @@ mp_key = MPDataRetrieval().mprester.api_key
 
 class NotebookExampleTest(unittest.TestCase):
     def test_intro_predicting_bulk_modulus(self):
-        path = os.path.join(module_dir, "intro_predicting_bulk_modulus.ipynb")
+        path = os.path.join(ml_dir, "bulk_modulus.ipynb")
         _notebook_run(path)
 
     @unittest.skipIf(citrine_key is None, "CITRINE_KEY env variable not set.")
     def test_experiment_vs_computed_bandgap(self):
-        path = os.path.join(module_dir, "experiment_vs_computed_bandgap.ipynb")
+        path = os.path.join(dr_dir, "expt_vs_comp_bandgap.ipynb")
         _notebook_run(path)
 
     @unittest.skipIf(not all([citrine_key, mpds_key, mp_key]),
                      "data retrieval keys not set")
     def test_get_data(self):
-        path = os.path.join(module_dir, "data_retrieval_basics.ipynb")
+        path = os.path.join(dr_dir, "data_retrieval_basics.ipynb")
         _notebook_run(path)
 
     @unittest.skipIf(mpds_key is None, "MPDS_KEY env variable not set")
     def test_uo_bondlengths(self):
-        path = os.path.join(module_dir, "u-o_bondlength_analysis.ipynb")
+        path = os.path.join(dr_dir, "mpds.ipynb")
         _notebook_run(path)
 
     def test_visualization_with_figrecipes(self):
-        path = os.path.join(module_dir, "visualization_with_figrecipes.ipynb")
+        path = os.path.join(fr_dir, "figrecipes_basics.ipynb")
         _notebook_run(path)
 
     @unittest.skipIf(not all([mp_key, citrine_key]))
     def test_advanced_visualization(self):
-        path = os.path.join(module_dir, "advanced_visualization.ipynb")
+        path = os.path.join(fr_dir, "figrecipes_advanced.ipynb")
         _notebook_run(path)
 
 
