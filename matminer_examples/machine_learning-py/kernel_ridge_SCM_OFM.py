@@ -15,7 +15,7 @@ import argparse
 import time
 
 
-__author__ = "Kyle Bystrom"
+__author__ = ["Kyle Bystrom", "Alex Dunn"]
 
 """
 The following script is an example of how to use matminer to run a kernel
