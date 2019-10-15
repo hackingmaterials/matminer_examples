@@ -248,7 +248,7 @@ for ROW in [False, True]:
     finish = time.monotonic()
     print("TIME TO TEST OFM %f SECONDS" % (finish-start))
     print()
-    df.drop('orbital field matrix', 1, inplace = True)
+    df.drop(columns=ofm.feature_labels(), inplace = True)
 
 """
 
