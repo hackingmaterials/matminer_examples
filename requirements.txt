@@ -1,3 +1,4 @@
 matminer[mpds]
 lolopy
 matplotlib
+automatminer

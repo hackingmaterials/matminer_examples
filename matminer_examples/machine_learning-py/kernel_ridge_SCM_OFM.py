@@ -15,7 +15,7 @@ import argparse
 import time
 
 
-__author__ = "Kyle Bystrom"
+__author__ = ["Kyle Bystrom", "Alex Dunn"]
 
 """
 The following script is an example of how to use matminer to run a kernel
@@ -36,6 +36,9 @@ matrices (SCM) and orbital field matrices (OFM). The script follows 4 main steps
 4)  Cross validation is run on the model, and mean average error (MAE),
     root mean square error (RMSE), and r-squared scores are calculated
     for each model.
+    
+    
+This script was last run successfully with matminer v0.6.2.
 """
 
 argparser = argparse.ArgumentParser()
@@ -153,14 +156,14 @@ print ("DIAG ELEMS", DIAG)
 
 # Featurize dataframe with sine coulomb matrix and time it
 start = time.monotonic()
-scm = SineCoulombMatrix(DIAG)
+scm = SineCoulombMatrix(diag_elems=DIAG, flatten=True)
 # Set the number of jobs for parallelization
 scm.set_n_jobs(NJOBS)
-df = scm.featurize_dataframe(df, 'structure')
+df = scm.fit_featurize_dataframe(df, 'structure')
 # Take the eigenvalues of the SCMs to form vector descriptors
-df['sine coulomb matrix'] = pd.Series([np.sort(np.linalg.eigvals(s))[::-1]
-                                       for s in df['sine coulomb matrix']],
-                                      df.index)
+# df['sine coulomb matrix'] = pd.Series([np.sort(np.linalg.eigvals(s))[::-1]
+#                                        for s in df['sine coulomb matrix']],
+#                                       df.index)
 finish = time.monotonic()
 print("TIME TO FEATURIZE SCM %f SECONDS" % (finish-start))
 print()
@@ -171,7 +174,8 @@ print(krr.get_params().keys())
 
 # Initialize hyperparameter grid search
 hpsel = GridSearchCV(krr, params['sine coulomb matrix'], cv=inner_cv, refit=True)
-X = df['sine coulomb matrix'].as_matrix()
+# X = df['sine coulomb matrix'].as_matrix()
+X = df[scm.feature_labels()].as_matrix()
 
 # Append each vector descriptor with zeroes to make them all the same size.
 XLIST = []
@@ -208,11 +212,9 @@ for ROW in [False, True]:
 
     # Featurize dataframe with OFM and time it
     start = time.monotonic()
-    ofm = OrbitalFieldMatrix(ROW)
+    ofm = OrbitalFieldMatrix(period_tag=ROW)
     ofm.set_n_jobs(NJOBS)
-    df = ofm.featurize_dataframe(df, 'structure')
-    df['orbital field matrix'] = pd.Series([s.flatten() \
-        for s in df['orbital field matrix']], df.index)
+    df = ofm.fit_featurize_dataframe(df, 'structure')
     finish = time.monotonic()
     print("TIME TO FEATURIZE OFM %f SECONDS" % (finish-start))
     print()
@@ -221,7 +223,7 @@ for ROW in [False, True]:
     krr = KernelRidge()
     hpsel = GridSearchCV(krr, params['orbital field matrix'],
                          cv=inner_cv, refit=True)
-    X = df['orbital field matrix'].as_matrix()
+    X = df[ofm.feature_labels()].as_matrix()
     # Flatten each OFM to form a vector descriptor
     XLIST = []
     for i in range(len(X)):
@@ -246,7 +248,7 @@ for ROW in [False, True]:
     finish = time.monotonic()
     print("TIME TO TEST OFM %f SECONDS" % (finish-start))
     print()
-    df.drop('orbital field matrix', 1, inplace = True)
+    df.drop(columns=ofm.feature_labels(), inplace = True)
 
 """
 
