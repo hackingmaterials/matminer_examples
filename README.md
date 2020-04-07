@@ -3,7 +3,7 @@ A repo of examples for the matminer (https://github.com/hackingmaterials/matmine
 
 Click on the icon below to run the example notebooks interactively online (it may take a few minutes to setup matminer environment):
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/hackingmaterials/matminer_examples/master?filepath=notebooks%2Findex.ipynb)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/hackingmaterials/matminer_examples/master?filepath=matminer_examples%2Findex.ipynb)
 
 
 If you find matminer useful, please encourage its development by citing the following paper in your research:
