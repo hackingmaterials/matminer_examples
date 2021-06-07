@@ -5,7 +5,7 @@ import subprocess
 
 import unittest
 
-from pymatgen import MPRester
+from pymatgen.ext.matproj import MPRester
 
 module_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           '..', 'matminer_examples')
@@ -27,7 +27,6 @@ class ScriptExampleTest(unittest.TestCase):
         fr_dir = os.path.join(module_dir, 'figrecipes-py')
         # List of scripts to test, note that we don't test 'extras'
         # because of online functionality and 'heatmap' needs to be resolved
-        # TODO: resolve heatmap discrepancy with main repo
         tests = ['bar', 'histogram', 'parallel_coordinates',
                  'scatter_matrix', 'violin', 'xy']
         for test in tests:
