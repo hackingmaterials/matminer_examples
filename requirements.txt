@@ -2,3 +2,4 @@ matminer[mpds]
 lolopy
 matplotlib
 automatminer
+git+git://github.com/hackingmaterials/figrecipes
