@@ -3,7 +3,7 @@ PlotlyFig examples of parallel coordinates plots.
 """
 
 from matminer.datasets import load_dataset
-from matminer import PlotlyFig
+from figrecipes import PlotlyFig
 
 __author__ = "Alex Dunn <ardunn@lbl.gov>"
 

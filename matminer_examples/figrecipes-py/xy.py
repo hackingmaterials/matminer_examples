@@ -11,8 +11,8 @@ MAPI_KEY environment variable.
 from matminer.data_retrieval.retrieve_Citrine import CitrineDataRetrieval
 from matminer.data_retrieval.retrieve_MP import MPDataRetrieval
 from matminer.datasets import load_dataset
-from matminer.figrecipes.plot import PlotlyFig
-from pymatgen import Composition
+from figrecipes import PlotlyFig
+from pymatgen.core.composition import Composition
 
 __author__ = "Alireza Faghaninia  <alireza.faghaninia@gmail.com>"
 

@@ -3,7 +3,7 @@ This script shows some basic examples of bar plots using figrecipes in
 matminer.
 """
 
-from matminer import PlotlyFig
+from figrecipes import PlotlyFig
 from matminer.datasets import load_dataset
 
 __author__ = "Alex Dunn <ardunn@lbl.gov>"

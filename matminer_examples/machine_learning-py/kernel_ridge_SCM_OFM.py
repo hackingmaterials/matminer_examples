@@ -116,7 +116,7 @@ if args.debug:
     NUM_SPLITS = 3
 else:
     NUM_SPLITS = 5
-inner_cv = KFold(n_splits=NUM_SPLITS-1, shuffle=False, random_state=0)
+inner_cv = KFold(n_splits=NUM_SPLITS-1, shuffle=False)
 kf = KFold(NUM_SPLITS, False)
 
 
@@ -174,8 +174,8 @@ print(krr.get_params().keys())
 
 # Initialize hyperparameter grid search
 hpsel = GridSearchCV(krr, params['sine coulomb matrix'], cv=inner_cv, refit=True)
-# X = df['sine coulomb matrix'].as_matrix()
-X = df[scm.feature_labels()].as_matrix()
+# X = df['sine coulomb matrix'].to_numpy()
+X = df[scm.feature_labels()].to_numpy()
 
 # Append each vector descriptor with zeroes to make them all the same size.
 XLIST = []
@@ -183,8 +183,8 @@ for i in range(len(X)):
     XLIST.append(np.append(X[i], np.zeros(nt - X[i].shape[0])))
 X = np.array(XLIST)
 print(X.shape)
-Y = df['formation_energy'].as_matrix()
-N = df['nsites'].as_matrix()
+Y = df['formation_energy'].to_numpy()
+N = df['nsites'].to_numpy()
 mae, rmse, r2 = 0, 0, 0
 
 # Evaluate SCM and time it
@@ -223,14 +223,14 @@ for ROW in [False, True]:
     krr = KernelRidge()
     hpsel = GridSearchCV(krr, params['orbital field matrix'],
                          cv=inner_cv, refit=True)
-    X = df[ofm.feature_labels()].as_matrix()
+    X = df[ofm.feature_labels()].to_numpy()
     # Flatten each OFM to form a vector descriptor
     XLIST = []
     for i in range(len(X)):
         XLIST.append(X[i].flatten())
     X = np.array(XLIST)
     print(X.shape)
-    Y = df['formation_energy_per_atom'].as_matrix()
+    Y = df['formation_energy_per_atom'].to_numpy()
     mae, rmse, r2 = 0, 0, 0
     # Evaluate OFM
     start = time.monotonic()

@@ -2,7 +2,7 @@
 Examples of formatting and using extra features of PlotlyFig
 """
 import pprint
-from matminer import PlotlyFig
+from figrecipes import PlotlyFig
 from matminer.datasets import load_dataset
 
 __author__ = "Alex Dunn <ardunn@lbl.gov>"

@@ -4,7 +4,7 @@ PlotlyFig examples of heatmap plots.
 
 import numpy as np
 import pandas as pd
-from matminer import PlotlyFig
+from figrecipes import PlotlyFig
 from matminer.datasets import load_dataset
 from matminer.featurizers.structure import GlobalSymmetryFeatures, \
     DensityFeatures
